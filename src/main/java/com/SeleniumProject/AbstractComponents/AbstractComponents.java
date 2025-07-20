@@ -3,6 +3,8 @@ package com.SeleniumProject.AbstractComponents;
 import java.time.Duration;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementClickInterceptedException;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -46,12 +48,17 @@ public class AbstractComponents {
 		wait.until(ExpectedConditions.visibilityOf(ele));
 	}
 	
-	public CartPage goToCart()
-	{
-		cartHeader.click();
-		CartPage cartPage=new CartPage(driver);
-		return cartPage;
+	public void goToCart() {
+	    try {
+	        cartHeader.click(); // default
+	    } catch (ElementClickInterceptedException e) {
+	        // Scroll into view + JS click as fallback
+	        JavascriptExecutor js = (JavascriptExecutor) driver;
+	        js.executeScript("arguments[0].scrollIntoView(true);", cartHeader);
+	        js.executeScript("arguments[0].click();", cartHeader);
+	    }
 	}
+
 	
 	public OrderPage goToOrderPage()
 	{
