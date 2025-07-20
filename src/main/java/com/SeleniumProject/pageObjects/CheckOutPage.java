@@ -1,5 +1,6 @@
 package com.SeleniumProject.pageObjects;
 
+import java.time.Duration;
 import java.util.List;
 
 import org.openqa.selenium.By;
@@ -8,6 +9,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.SeleniumProject.AbstractComponents.AbstractComponents;
 
@@ -32,20 +35,25 @@ public class CheckOutPage extends AbstractComponents{
 	
 	By results=By.xpath("//button[contains(@class,'ta-item')]");
 	
-	public void selectCountry(String countryName)
-	{
-		Actions a=new Actions(driver);
-		a.sendKeys(countryText, countryName).build().perform();
-		waitForElementToAppear(results);
-		for(WebElement country:selectCountry)
-		{
-			if(country.getText().equals(countryName))
-			{
-				country.click();
-				break;
-			}
-		}
+	public void selectCountry(String countryName) {
+	    Actions a = new Actions(driver);
+	    a.sendKeys(countryText, countryName).build().perform();
+
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+	    wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(results));
+
+	    if (selectCountry.isEmpty()) {
+	        System.out.println("❌ No country options found in dropdown.");
+	    }
+
+	    for (WebElement country : selectCountry) {
+	        if (country.getText().equalsIgnoreCase(countryName)) {
+	            country.click();
+	            break;
+	        }
+	    }
 	}
+
 	public ConfirmationPage submitOrder()
 	{
 		submit.click();
