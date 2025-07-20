@@ -1,11 +1,15 @@
 package com.SeleniumProject.pageObjects;
 
-import org.openqa.selenium.By;
+import java.time.Duration;
+
+import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.SeleniumProject.AbstractComponents.AbstractComponents;
 
@@ -31,20 +35,28 @@ public class LandingPage extends AbstractComponents{
 	@FindBy(xpath="//div[contains(@class,'flyInOut')]")
 	WebElement errorMessage;
 	
-	public ProductCatalogue loginApplication(String email,String password)
-	{
-		 userEmail.sendKeys(email);
-		    userPassword.sendKeys(password);
+	public ProductCatalogue loginApplication(String email, String password) {
+	    userEmail.sendKeys(email);
+	    userPassword.sendKeys(password);
 
-		    // Scroll into view (optional but helpful for CI like Jenkins)
-		    ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", submit);
-		    submit.click();
+	    // Scroll the submit button into view (helps on CI/Jenkins)
+	    ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", submit);
 
-		    // Explicit wait for the login button to be clickable
-		  // waitForElementToDisapppear(submit);
+	    try {
+	        // Wait explicitly until the button is clickable
+	        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+	        wait.until(ExpectedConditions.elementToBeClickable(submit));
 
-		    return new ProductCatalogue(driver);
+	        // Try to click
+	        submit.click();
+	    } catch (ElementClickInterceptedException e) {
+	        // Fallback to JavaScript click if regular click fails
+	        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", submit);
+	    }
+
+	    return new ProductCatalogue(driver);
 	}
+
 	
 	public void goTo()
 	{
