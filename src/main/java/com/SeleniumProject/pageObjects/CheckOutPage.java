@@ -37,30 +37,30 @@ public class CheckOutPage extends AbstractComponents{
 	
 	public void selectCountry(String countryName) {
 	    countryText.clear();
-	    countryText.sendKeys(countryName); // Avoid Actions, direct sendKeys works better in headless
+	    countryText.sendKeys(countryName);
 
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-	    
-	    // Wait for dropdown suggestions to appear
 	    wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(results));
 
-	    // Logging for debugging
 	    System.out.println("✅ Found " + selectCountry.size() + " country options.");
 
 	    for (WebElement country : selectCountry) {
 	        System.out.println("🔍 Checking country: " + country.getText());
 	        if (country.getText().equalsIgnoreCase(countryName)) {
-	            WebDriverWait clickableWait = new WebDriverWait(driver, Duration.ofSeconds(5));
-	            clickableWait.until(ExpectedConditions.elementToBeClickable(country));
-	            country.click();
-	            System.out.println("✅ Selected country: " + countryName);
+	            try {
+	                wait.until(ExpectedConditions.elementToBeClickable(country));
+	                country.click();
+	                System.out.println("✅ Selected country: " + countryName);
+	            } catch (org.openqa.selenium.ElementClickInterceptedException e) {
+	                System.out.println("⚠️ ElementClickInterceptedException: using JS click as fallback.");
+	                ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].click();", country);
+	            }
 	            return;
 	        }
 	    }
 
 	    System.out.println("❌ Country not found in suggestions: " + countryName);
 	}
-
 
 	public ConfirmationPage submitOrder()
 	{
