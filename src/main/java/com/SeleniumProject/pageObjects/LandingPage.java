@@ -1,6 +1,7 @@
 package com.SeleniumProject.pageObjects;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -32,11 +33,16 @@ public class LandingPage extends AbstractComponents{
 	
 	public ProductCatalogue loginApplication(String email,String password)
 	{
-		userEmail.sendKeys(email);
-		userPassword.sendKeys(password);
-		submit.click();
-		ProductCatalogue productCatalogue=new ProductCatalogue(driver);
-		return productCatalogue;
+		 userEmail.sendKeys(email);
+		    userPassword.sendKeys(password);
+
+		    // Scroll into view (optional but helpful for CI like Jenkins)
+		    ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", submit);
+
+		    // Explicit wait for the login button to be clickable
+		   waitForElementToDisapppear(submit);
+
+		    return new ProductCatalogue(driver);
 	}
 	
 	public void goTo()
