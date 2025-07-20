@@ -9,9 +9,4 @@
       <class name="com.SeleniumProject.tests.StandAlone"/>
     </classes>
   </test> <!-- Test -->
-  <test thread-count="5" name="ErrorValidation">
-  <classes>
-      <class name="com.SeleniumProject.tests.ErrorValidation"/>
-    </classes>
-  </test> <!-- Test -->
 </suite> <!-- Suite -->

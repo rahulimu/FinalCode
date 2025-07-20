@@ -8,6 +8,7 @@
     <classes>
       <class name="com.SeleniumProject.tests.ErrorValidation">
         <methods>
+          <include name="productValidation"/>
           <include name="tearDown"/>
           <include name="errorValidation"/>
           <include name="launchApplication"/>
@@ -15,4 +16,16 @@
       </class> <!-- com.SeleniumProject.tests.ErrorValidation -->
     </classes>
   </test> <!-- ErrorValidation(failed) -->
+  <test thread-count="5" parallel="tests" name="SubmitOrder(failed)">
+    <classes>
+      <class name="com.SeleniumProject.tests.StandAlone">
+        <methods>
+          <include name="tearDown"/>
+          <include name="submitOrder" invocation-numbers="0 1"/>
+          <include name="launchApplication"/>
+          <include name="orderHistory"/>
+        </methods>
+      </class> <!-- com.SeleniumProject.tests.StandAlone -->
+    </classes>
+  </test> <!-- SubmitOrder(failed) -->
 </suite> <!-- Failed suite [Suite] -->

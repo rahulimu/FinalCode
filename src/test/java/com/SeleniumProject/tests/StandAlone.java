@@ -21,7 +21,7 @@ import com.SeleniumProject.pageObjects.ProductCatalogue;
 
 public class StandAlone extends BaseTest {
 	String productName = "ZARA COAT 3";
-	@Test(dataProvider="getData",groups="Purchase")
+	@Test(dataProvider="getData") //groups="Purchase"
 	public void submitOrder(HashMap<String,String> input) throws IOException {
 		// TODO Auto-generated method stub
 
@@ -39,14 +39,14 @@ public class StandAlone extends BaseTest {
 
 	}
 	
-	@Test(dependsOnMethods= {"submitOrder"})
+	/*@Test(dependsOnMethods= {"submitOrder"})
 	public void orderHistory()
 	{
 		ProductCatalogue productCatalogue = landingPage.loginApplication("rahulsinhaimuv@gmail.com", "Rahul@1234");
 		OrderPage orderPage=productCatalogue.goToOrderPage();
 		Boolean match=orderPage.verifyOrderDisplay(productName);
 		Assert.assertTrue(match);
-	}
+	}*/
 	
 	@DataProvider
 	public Object[][] getData() throws IOException

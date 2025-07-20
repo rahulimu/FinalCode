@@ -32,7 +32,7 @@ public class ErrorValidation extends BaseTest {
 	@Test
 	public void errorValidation() throws IOException {
 		// TODO Auto-generated method stub
-        landingPage.loginApplication("rahulsinha123imuv@gmail.com", "Rahul@1234");
+        landingPage.loginApplication("rahulsinha123imuv@gmail.com", "Rahul@123456");
 		Assert.assertEquals("Incorrect email or password", landingPage.getErrorMessage());
 
 	}

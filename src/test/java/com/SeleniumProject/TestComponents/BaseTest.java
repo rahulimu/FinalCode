@@ -48,7 +48,7 @@ public class BaseTest {
 
 		if (browsername.equalsIgnoreCase("chrome")) {
 			WebDriverManager.chromedriver().setup();
-			ChromeOptions options = new ChromeOptions();
+			/*ChromeOptions options = new ChromeOptions();
 
 			options.addArguments("--no-sandbox");
 			options.addArguments("--disable-dev-shm-usage");
@@ -63,9 +63,9 @@ public class BaseTest {
 			// Avoid session conflicts in CI
 			userDataDir = "/tmp/chrome-profile-" + UUID.randomUUID();
 			Files.createDirectories(Path.of(userDataDir));
-			options.addArguments("--user-data-dir=" + userDataDir);
+			options.addArguments("--user-data-dir=" + userDataDir);*/
 
-			driver = new ChromeDriver(options);
+			driver = new ChromeDriver();
 
 		} else if (browsername.equalsIgnoreCase("firefox")) {
 			WebDriverManager.firefoxdriver().setup();
