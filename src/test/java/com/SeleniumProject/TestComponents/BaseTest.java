@@ -45,21 +45,23 @@ public class BaseTest {
 		String browsername = prop.getProperty("browser");
 
 		if (browsername.equalsIgnoreCase("chrome")) {
-			WebDriverManager.chromedriver().setup();
-			ChromeOptions options = new ChromeOptions();
+		    WebDriverManager.chromedriver().setup();
+		    ChromeOptions options = new ChromeOptions();
 
-			options.addArguments("--no-sandbox");
-			options.addArguments("--disable-dev-shm-usage");
+		    // Required options for headless + Jenkins compatibility
+		    options.addArguments("--no-sandbox");
+		    options.addArguments("--disable-dev-shm-usage");
+		    options.addArguments("--disable-gpu");
+		    options.addArguments("--headless=new"); // Use --headless=new for latest Chrome
+		    options.addArguments("--remote-allow-origins=*");
 
-			// Generate unique user-data-dir for Chrome to avoid session conflicts
-			userDataDir = "/tmp/chrome-profile-" + UUID.randomUUID();
-			Files.createDirectories(Path.of(userDataDir));
-			options.addArguments("--user-data-dir=" + userDataDir);
+		    // Generate unique user profile directory to avoid Jenkins session conflicts
+		    userDataDir = "/tmp/chrome-profile-" + UUID.randomUUID();
+		    Files.createDirectories(Path.of(userDataDir));
+		    options.addArguments("--user-data-dir=" + userDataDir);
 
-			// Optional for Jenkins (uncomment if needed)
-			// options.addArguments("--headless=new");
-
-			driver = new ChromeDriver(options);
+		    driver = new ChromeDriver(options);
+		
 
 		} else if (browsername.equalsIgnoreCase("firefox")) {
 			WebDriverManager.firefoxdriver().setup();
