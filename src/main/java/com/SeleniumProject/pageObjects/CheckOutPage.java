@@ -16,7 +16,7 @@ import com.SeleniumProject.AbstractComponents.AbstractComponents;
 
 public class CheckOutPage extends AbstractComponents{
 	WebDriver driver;
-	
+	//new Comments
 	public CheckOutPage(WebDriver driver)
 	{
 		super(driver);
