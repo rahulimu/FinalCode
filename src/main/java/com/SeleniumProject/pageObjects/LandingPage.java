@@ -38,9 +38,10 @@ public class LandingPage extends AbstractComponents{
 
 		    // Scroll into view (optional but helpful for CI like Jenkins)
 		    ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", submit);
+		    submit.click();
 
 		    // Explicit wait for the login button to be clickable
-		   waitForElementToDisapppear(submit);
+		  // waitForElementToDisapppear(submit);
 
 		    return new ProductCatalogue(driver);
 	}
