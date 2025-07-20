@@ -65,7 +65,7 @@ public class BaseTest {
 			Files.createDirectories(Path.of(userDataDir));
 			options.addArguments("--user-data-dir=" + userDataDir);
 
-			driver = new ChromeDriver();
+			driver = new ChromeDriver(options);
 
 		} else if (browsername.equalsIgnoreCase("firefox")) {
 			WebDriverManager.firefoxdriver().setup();
