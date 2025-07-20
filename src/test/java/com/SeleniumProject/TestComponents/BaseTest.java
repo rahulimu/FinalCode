@@ -34,34 +34,38 @@ public class BaseTest {
 
 	public WebDriver driver;
 	public LandingPage landingPage;
-	private String userDataDir; // store unique profile path for cleanup
+	private String userDataDir;
+	private Properties prop;
 
 	public WebDriver initializeDriver() throws IOException {
-		// Load browser from properties
-		Properties prop = new Properties();
+		prop = new Properties();
 		FileInputStream fis = new FileInputStream(System.getProperty("user.dir")
 				+ "//src//main//java//com//SeleniumProject//resources//GlobalData.properties");
 		prop.load(fis);
+
 		String browsername = prop.getProperty("browser");
+		String headless = prop.getProperty("headless");
 
 		if (browsername.equalsIgnoreCase("chrome")) {
-		    WebDriverManager.chromedriver().setup();
-		    ChromeOptions options = new ChromeOptions();
+			WebDriverManager.chromedriver().setup();
+			ChromeOptions options = new ChromeOptions();
 
-		    // Required options for headless + Jenkins compatibility
-		    options.addArguments("--no-sandbox");
-		    options.addArguments("--disable-dev-shm-usage");
-		    options.addArguments("--disable-gpu");
-		    options.addArguments("--headless=new"); // Use --headless=new for latest Chrome
-		    options.addArguments("--remote-allow-origins=*");
+			options.addArguments("--no-sandbox");
+			options.addArguments("--disable-dev-shm-usage");
+			options.addArguments("--disable-gpu");
+			options.addArguments("--remote-allow-origins=*");
 
-		    // Generate unique user profile directory to avoid Jenkins session conflicts
-		    userDataDir = "/tmp/chrome-profile-" + UUID.randomUUID();
-		    Files.createDirectories(Path.of(userDataDir));
-		    options.addArguments("--user-data-dir=" + userDataDir);
+			// 🧠 Use headless if set to true in properties
+			if (headless != null && headless.equalsIgnoreCase("true")) {
+				options.addArguments("--headless=new");
+			}
 
-		    driver = new ChromeDriver(options);
-		
+			// Avoid session conflicts in CI
+			userDataDir = "/tmp/chrome-profile-" + UUID.randomUUID();
+			Files.createDirectories(Path.of(userDataDir));
+			options.addArguments("--user-data-dir=" + userDataDir);
+
+			driver = new ChromeDriver(options);
 
 		} else if (browsername.equalsIgnoreCase("firefox")) {
 			WebDriverManager.firefoxdriver().setup();
@@ -105,23 +109,23 @@ public class BaseTest {
 			driver.quit();
 		}
 
-		// Clean up the temporary user data directory if used
+		// Clean up the temporary Chrome profile
 		if (userDataDir != null) {
 			try {
 				Path path = Path.of(userDataDir);
 				if (Files.exists(path)) {
 					Files.walk(path)
-						 .sorted((a, b) -> b.compareTo(a)) // delete children first
-						 .forEach(p -> {
-							 try {
-								 Files.delete(p);
-							 } catch (IOException e) {
-								 System.err.println("Failed to delete: " + p);
-							 }
-						 });
+						.sorted((a, b) -> b.compareTo(a)) // delete child paths first
+						.forEach(p -> {
+							try {
+								Files.delete(p);
+							} catch (IOException e) {
+								System.err.println("Failed to delete: " + p);
+							}
+						});
 				}
 			} catch (IOException e) {
-				System.err.println("Failed to clean Chrome profile dir: " + userDataDir);
+				System.err.println("Failed to clean profile dir: " + userDataDir);
 			}
 		}
 	}
