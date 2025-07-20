@@ -36,23 +36,31 @@ public class CheckOutPage extends AbstractComponents{
 	By results=By.xpath("//button[contains(@class,'ta-item')]");
 	
 	public void selectCountry(String countryName) {
-	    Actions a = new Actions(driver);
-	    a.sendKeys(countryText, countryName).build().perform();
+	    countryText.clear();
+	    countryText.sendKeys(countryName); // Avoid Actions, direct sendKeys works better in headless
 
-	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+	    
+	    // Wait for dropdown suggestions to appear
 	    wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(results));
 
-	    if (selectCountry.isEmpty()) {
-	        System.out.println("❌ No country options found in dropdown.");
-	    }
+	    // Logging for debugging
+	    System.out.println("✅ Found " + selectCountry.size() + " country options.");
 
 	    for (WebElement country : selectCountry) {
+	        System.out.println("🔍 Checking country: " + country.getText());
 	        if (country.getText().equalsIgnoreCase(countryName)) {
+	            WebDriverWait clickableWait = new WebDriverWait(driver, Duration.ofSeconds(5));
+	            clickableWait.until(ExpectedConditions.elementToBeClickable(country));
 	            country.click();
-	            break;
+	            System.out.println("✅ Selected country: " + countryName);
+	            return;
 	        }
 	    }
+
+	    System.out.println("❌ Country not found in suggestions: " + countryName);
 	}
+
 
 	public ConfirmationPage submitOrder()
 	{
