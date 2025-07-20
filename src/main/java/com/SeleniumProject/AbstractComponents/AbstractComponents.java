@@ -48,16 +48,19 @@ public class AbstractComponents {
 		wait.until(ExpectedConditions.visibilityOf(ele));
 	}
 	
-	public void goToCart() {
+	public CartPage goToCart() {
 	    try {
-	        cartHeader.click(); // default
+	        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+	        wait.until(ExpectedConditions.elementToBeClickable(cartHeader));
+	        cartHeader.click();
 	    } catch (ElementClickInterceptedException e) {
-	        // Scroll into view + JS click as fallback
 	        JavascriptExecutor js = (JavascriptExecutor) driver;
 	        js.executeScript("arguments[0].scrollIntoView(true);", cartHeader);
 	        js.executeScript("arguments[0].click();", cartHeader);
 	    }
+	    return new CartPage(driver);
 	}
+
 
 	
 	public OrderPage goToOrderPage()
